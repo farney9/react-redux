@@ -22,7 +22,7 @@ export default function pokeReducer(state = dataInicial, action){
         case GET_NEXT_POKE_SUCCESS:
             return {...state, ...action.payload}
         case GET_DETAILS_SUCCESS:
-            return {...state, pokemonDetails: action.payload}
+            return {...state, unPokemon: action.payload}
         default:
             return state
     }
@@ -30,7 +30,8 @@ export default function pokeReducer(state = dataInicial, action){
 
 // Actions
 
-export const getDetailsAction = (url) => async (dispatch) => {
+export const getDetailsAction = (url = "https://pokeapi.co/api/v2/pokemon/1/") => async (dispatch, getState) => {
+
     try {
         const res = await axios.get(url)
         console.log(res.data);
@@ -41,6 +42,7 @@ export const getDetailsAction = (url) => async (dispatch) => {
                 peso  : res.data.weight,
                 alto  : res.data.height,
                 img   : res.data.sprites.other.dream_world.front_default
+                // img   : res.data.sprites.front_default
             }
         })
 
@@ -50,7 +52,7 @@ export const getDetailsAction = (url) => async (dispatch) => {
     }
 }
 
-export const getPokemonsAction = () => async (dispatch) => {
+export const getPokemonsAction = () => async (dispatch, getState) => {
     // console.log('getState', getState().pokeArray.offset);
     // const offset = getState().pokeArray.offset
 
