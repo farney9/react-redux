@@ -14,7 +14,15 @@ const Pokemones = () => {
     const pokemones = useSelector(store => store.pokeArray.results)
     const next = useSelector(store => store.pokeArray.next)
     const previous = useSelector(store => store.pokeArray.previous)
-    console.log(pokemones);
+    // console.log(pokemones);
+
+
+    React.useEffect(()=>{
+        const fetchData = () => {
+            dispatch(getPokemonsAction())
+        }
+        fetchData()
+    },[dispatch])
 
     return (
         <div className="container">

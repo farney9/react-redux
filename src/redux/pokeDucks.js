@@ -32,20 +32,41 @@ export default function pokeReducer(state = dataInicial, action){
 
 export const getDetailsAction = (url = "https://pokeapi.co/api/v2/pokemon/1/") => async (dispatch, getState) => {
 
+    const res = await axios.get(url)
+    // console.log(res.data);
+
+    if (localStorage.getItem(url)) {
+        console.log('Datos desde LocalStorage');
+
+        dispatch({
+            type: GET_DETAILS_SUCCESS,
+            payload: JSON.parse(localStorage.getItem(url))
+        })
+        return
+    }
+
     try {
-        const res = await axios.get(url)
-        console.log(res.data);
+        console.log('Datos desde la API');
+
         dispatch({
             type: GET_DETAILS_SUCCESS,
             payload: {
-                nombre: res.data.name,
-                peso  : res.data.weight,
-                alto  : res.data.height,
-                img   : res.data.sprites.other.dream_world.front_default
+                nombre     : res.data.name,
+                peso       : res.data.weight,
+                alto       : res.data.height,
+                experiencia: res.data.base_experience,
+                img        : res.data.sprites.other.dream_world.front_default
                 // img   : res.data.sprites.front_default
             }
         })
 
+        localStorage.setItem(url, JSON.stringify({
+            nombre     : res.data.name,
+            peso       : res.data.weight,
+            alto       : res.data.height,
+            experiencia: res.data.base_experience,
+            img        : res.data.sprites.other.dream_world.front_default
+            }))
         
     } catch (error) {
         console.log(error.mesage);
@@ -68,7 +89,7 @@ export const getPokemonsAction = () => async (dispatch, getState) => {
 
     try {
         console.log('Datos desde la api');
-        const res = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=0&limit=20`)
+        const res = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=0&limit=10`)
         dispatch({
             type: GET_POKE_SUCCESS,
             payload: res.data
